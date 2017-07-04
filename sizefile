@@ -1,0 +1,20 @@
+VOID SizeFile(ULARGE_INTEGER value, PTSTR buff)
+{
+	int s[5];
+	s[0] = value.QuadPart & 0x3ff;
+	s[1] = (value.QuadPart & 0xfffff) >> 10;
+	s[2] = (value.QuadPart & 0x3fffffff) >> 20;
+	s[3] = (value.QuadPart & 0xffffffffff) >> 30;
+	s[4] = (value.QuadPart & 0x3ffffffffffff) >> 40;
+	char str[5][10]{ "bytes","KB","MB","GB","TB" };
+	int i = 4;
+	while (i--)
+	{
+		if (s[i])
+		{
+			wsprintf(buff, "%lu.%lu %s", s[i], 1000 * s[i - 1] / 1024, str[i]);
+			return;
+		}
+	}
+	wsprintf(buff, "%lu %s", s[i], str[i]);
+}
